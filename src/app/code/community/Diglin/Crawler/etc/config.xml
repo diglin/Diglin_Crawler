@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Diglin GmbH - Switzerland
+ *
+ * @author      Sylvain Rayé <support at diglin.com>
+ * @category    Diglin
+ * @package     Diglin_Crawler
+ * @copyright   Copyright (c) 2011-2016 Diglin (http://www.diglin.com)
+ */-->
+<config>
+    <modules>
+        <Diglin_Crawler>
+            <version>1.0.0</version>
+        </Diglin_Crawler>
+    </modules>
+
+    <default>
+        <diglin_crawler>
+            <config>
+                <enabled>1</enabled>
+            </config>
+        </diglin_crawler>
+    </default>
+
+    <global>
+        <models>
+            <diglin_crawler>
+                <class>Diglin_Crawler_Model</class>
+            </diglin_crawler>
+        </models>
+
+        <helpers>
+            <diglin_crawler>
+                <class>Diglin_Crawler_Helper</class>
+            </diglin_crawler>
+        </helpers>
+
+        <events>
+            <catalog_product_save_commit_after>
+                <observers>
+                    <diglin_crawler>
+                        <class>diglin_crawler/observer</class>
+                        <method>catalogProductSaveCommitAfter</method>
+                    </diglin_crawler>
+                </observers>
+            </catalog_product_save_commit_after>
+
+            <cataloginventory_stock_item_save_after>
+                <observers>
+                    <diglin_crawler>
+                        <class>diglin_crawler/observer</class>
+                        <method>cataloginventoryStockItemSaveAfter</method>
+                    </diglin_crawler>
+                </observers>
+            </cataloginventory_stock_item_save_after>
+
+            <catalog_category_save_commit_after>
+                <observers>
+                    <diglin_crawler>
+                        <class>diglin_crawler/observer</class>
+                        <method>catalogCategorySaveCommitAfter</method>
+                    </diglin_crawler>
+                </observers>
+            </catalog_category_save_commit_after>
+
+            <cms_page_save_commit_after>
+                <observers>
+                    <diglin_crawler>
+                        <class>diglin_crawler/observer</class>
+                        <method>cmsPageSaveCommitAfter</method>
+                    </diglin_crawler>
+                </observers>
+            </cms_page_save_commit_after>
+
+            <enterprise_cms_revision_save_commit_after>
+                <observers>
+                    <diglin_crawler>
+                        <class>diglin_crawler/observer</class>
+                        <method>enterpriseCmsRevisionSaveCommitAfter</method>
+                    </diglin_crawler>
+                </observers>
+            </enterprise_cms_revision_save_commit_after>
+
+            <adminhtml_cache_flush_system>
+                <observers>
+                    <diglin_crawler>
+                        <class>diglin_crawler/observer</class>
+                        <method>queueAllUrls</method>
+                    </diglin_crawler>
+                </observers>
+            </adminhtml_cache_flush_system>
+
+            <adminhtml_cache_flush_all>
+                <observers>
+                    <diglin_crawler>
+                        <class>diglin_crawler/observer</class>
+                        <method>queueAllUrls</method>
+                    </diglin_crawler>
+                </observers>
+            </adminhtml_cache_flush_all>
+        </events>
+    </global>
+
+    <crontab>
+        <jobs>
+            <diglin_crawler_urls>
+                <schedule>
+                    <cron_expr>0,10,20,30,40,50 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>diglin_crawler/cron::crawlUrls</model>
+                </run>
+            </diglin_crawler_urls>
+        </jobs>
+    </crontab>
+</config>

@@ -1,0 +1,17 @@
+{
+    "name": "diglin/diglin_crawler",
+    "description": "Crawl products, categories and cms pages urls to warmup cache. Based on crawler of Nexcess_Turpentine module without dependency with Varnish and with additional features. Several options are possible like going through basic authentification",
+    "type": "magento-module",
+    "license": "OSL-3.0",
+    "homepage":"https://github.com/diglin/Diglin_Crawler",
+    "authors": [
+        {
+            "name": "Sylvain Rayé",
+            "email": "support@diglin.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require":{
+        "magento-hackathon/magento-composer-installer":"*"
+    }
+}

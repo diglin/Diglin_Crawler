@@ -1,0 +1,3 @@
+src/app/etc/modules/Diglin_Crawler.xml       app/etc/modules/Diglin_Crawler.xml
+src/app/code/community/Diglin/Crawler/       app/code/community/Diglin/Crawler/
+src/shell/crawler.php       shell/crawler.php

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Diglin GmbH - Switzerland
+ *
+ * @author      Sylvain Rayé <support at diglin.com>
+ * @category    Diglin
+ * @package     Diglin_
+ * @copyright   Copyright (c) 2011-2016 Diglin (http://www.diglin.com)
+ */-->
+<config>
+    <modules>
+        <Diglin_Crawler>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Diglin_Crawler>
+    </modules>
+</config>
