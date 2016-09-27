@@ -58,11 +58,13 @@ class Diglin_Crawler_Model_Cron extends Varien_Event_Observer
     public function crawlUrls($force = false, $skipMaxExecutionTime = false, $verbose = false)
     {
         $helper = Mage::helper('diglin_crawler');
+
         if ($helper->isEnabled() || $force) {
 
             $cronHelper = Mage::helper('diglin_crawler/cron');
 
             $maxRunTime = $cronHelper->getAllowedRunTime();
+
             if ($maxRunTime === 0) {
                 $maxRunTime = self::MAX_CRAWL_TIME;
             }

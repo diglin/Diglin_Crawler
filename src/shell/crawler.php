@@ -22,6 +22,8 @@ class Diglin_Crawler_shell extends Mage_Shell_Abstract
      */
     public function run()
     {
+        ini_set('max_execution_time', 0); // Force to use via crawler helper to use a smaller max_execution_time
+    
         $startTime = microtime(true);
 
         if ($this->getArg('reset-url-queue')) {
