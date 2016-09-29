@@ -33,6 +33,11 @@
 class Diglin_Crawler_Model_Observer
 {
     /**
+     * @var array
+     */
+    protected $_customerGroupIds = [];
+
+    /**
      * Ban a specific product page from the cache
      *
      * Events:
@@ -50,9 +55,11 @@ class Diglin_Crawler_Model_Observer
             $product = $eventObject->getProduct();
             $cronHelper = Mage::helper('diglin_crawler/cron');
             $cronHelper->addProductToCrawlerQueue($product);
+            $this->_clearProductCache($product);
 
             foreach ($helper->getParentProducts($product) as $parentProduct) {
                 $cronHelper->addProductToCrawlerQueue($parentProduct);
+                $this->_clearProductCache($product);
             }
         }
     }
@@ -80,9 +87,11 @@ class Diglin_Crawler_Model_Observer
                 $cronHelper = Mage::helper('diglin_crawler/cron');
                 $product = Mage::getModel('catalog/product')->load($item->getProductId());
                 $cronHelper->addProductToCrawlerQueue($product);
+                $this->_clearProductCache($product);
 
                 foreach ($helper->getParentProducts($product) as $parentProduct) {
                     $cronHelper->addProductToCrawlerQueue($parentProduct);
+                    $this->_clearProductCache($parentProduct);
                 }
             }
         }
@@ -105,6 +114,8 @@ class Diglin_Crawler_Model_Observer
             $category = $eventObject->getCategory();
             $cronHelper = Mage::helper('diglin_crawler/cron');
             $cronHelper->addCategoryToCrawlerQueue($category);
+
+            // @todo ban category cache page
         }
     }
 
@@ -126,6 +137,8 @@ class Diglin_Crawler_Model_Observer
 
             $cronHelper = Mage::helper('diglin_crawler/cron');
             $cronHelper->addCmsPageToCrawlerQueue($pageId);
+
+            // @todo ban cms cache
         }
     }
 
@@ -153,6 +166,8 @@ class Diglin_Crawler_Model_Observer
             $pageIdentifier = $page->getIdentifier();
             $cronHelper = Mage::helper('diglin_crawler/cron');
             $cronHelper->addCmsPageToCrawlerQueue($pageIdentifier);
+
+            // @todo ban cms cache
         }
     }
 
@@ -170,5 +185,75 @@ class Diglin_Crawler_Model_Observer
             $cronHelper = Mage::helper('diglin_crawler/cron');
             $cronHelper->addUrlsToCrawlerQueue($cronHelper->getAllUrls());
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function _getCustomerGroupIds()
+    {
+        if (empty($this->_customerGroupIds)) {
+
+            $collection = Mage::getResourceModel('customer/group_collection');
+            $ids = [];
+
+            foreach ($collection->getItems() as $group) {
+                $ids[] = $group->getId();
+            }
+            $this->_customerGroupIds = $ids;
+        }
+
+        return $this->_customerGroupIds;
+    }
+
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     */
+    protected function _clearProductCache(Mage_Catalog_Model_Product $product)
+    {
+        if (class_exists('Diglin_Magento_Block_Catalog_Product_View')) {
+
+            $origStore = Mage::app()->getStore();
+
+            /* @var $store Mage_Core_Model_Store */
+            foreach (Mage::app()->getStores() as $storeId => $store) {
+
+                if (!$store->getIsActive()) {
+                    continue;
+                }
+
+                Mage::app()->setCurrentStore($store);
+
+                foreach ($this->_getCustomerGroupIds() as $customerGroupId) {
+                    $key = [
+                        'BLOCK_TPL',
+                        $store->getCode(),
+                        'template' => 'catalog/product/view.phtml',
+                        $customerGroupId,
+                        $product->getId()
+                    ];
+
+                    $key = array_values($key); // ignore array keys
+                    $key = implode('|', $key);
+                    $key = sha1($key);
+
+                    $this->_banFromCache($key);
+                }
+            }
+
+            Mage::app()->setCurrentStore($origStore);
+
+        }
+
+        Mage::dispatchEvent('diglin_crawler_clear_product_cache', ['product' => $product]);
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    protected function _banFromCache($id)
+    {
+        return Mage::app()->getCacheInstance()->remove($id);
     }
 }
