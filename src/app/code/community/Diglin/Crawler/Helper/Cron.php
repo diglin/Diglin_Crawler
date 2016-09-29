@@ -165,6 +165,10 @@ class Diglin_Crawler_Helper_Cron
 
         foreach (Mage::app()->getStores() as $storeId => $store) {
 
+            if (!$store->getIsActive()) {
+                continue;
+            }
+
             Mage::app()->setCurrentStore($store);
             $baseUrl = $store->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
             $urls[] = $baseUrl;
@@ -208,6 +212,10 @@ class Diglin_Crawler_Helper_Cron
 
         foreach (Mage::app()->getStores() as $storeId => $store) {
 
+            if (!$store->getIsActive()) {
+                continue;
+            }
+
             Mage::app()->setCurrentStore($store);
 
             $baseUrl = $store->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
@@ -236,6 +244,11 @@ class Diglin_Crawler_Helper_Cron
         $origStore = Mage::app()->getStore();
 
         foreach (Mage::app()->getStores() as $storeId => $store) {
+
+            if (!$store->getIsActive()) {
+                continue;
+            }
+
             Mage::app()->setCurrentStore($store);
             $catUrls[] = $category->getUrl();
         }
@@ -258,6 +271,11 @@ class Diglin_Crawler_Helper_Cron
         $page = Mage::getModel('cms/page')->load($cmsPageId);
 
         foreach (Mage::app()->getStores() as $storeId => $store) {
+
+            if (!$store->getIsActive()) {
+                continue;
+            }
+
             Mage::app()->setCurrentStore($store);
 
             $page->setStoreId($storeId);
