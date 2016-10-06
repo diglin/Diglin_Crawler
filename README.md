@@ -10,6 +10,8 @@ The Diglin_Crawler Magento 1.x extension allows to crawl all products, categorie
 - Run all the day during 5 minutes each 10 minutes to reduce server resources consumption
 - A shell script is provided under the folder `shell/crawler.php` with possible options. Use `php shell/crawler.php --help` for more informations
 
+## TODO
+- Clear cache of categories or cms update otherwise it doesn't make sense to crawl those pages
 
 ## Requirements
 
