@@ -26,6 +26,13 @@ class Diglin_Crawler_shell extends Mage_Shell_Abstract
     
         $startTime = microtime(true);
 
+        if ($this->getArg('debug')) {
+            $urls = Mage::helper('diglin_crawler/cron')->getUrlQueue();
+            print_r($urls);
+            echo PHP_EOL;
+            return;
+        }
+
         if ($this->getArg('reset-url-queue')) {
             Mage::app()->removeCache(Diglin_Crawler_Helper_Cron::CRAWLER_URLS_CACHE_ID);
             Mage::helper('diglin_crawler/cron')->addUrlToCrawlerQueue('');
@@ -73,6 +80,7 @@ Usage:  php -f crawler.php -- [options]
   --skip-max-execution-time    Skip the maximum execution time
   --reset-url-queue            Reset the url queue, empty it and fill it with products, categories and cms pages urls - if parameter exists, crawler won't be executed
   -v|--verbose                 Verbose
+  --debug                      Return the list of urls in queue
   help                         This help
 
 USAGE;
