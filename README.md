@@ -45,7 +45,6 @@ git clone https://github.com/diglin/Diglin_Crawler.git
 ```
 
 Then copy the files and folders in the corresponding Magento folders
-Do not forget the folder "lib"
 
 ### Via modman
 
